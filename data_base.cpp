@@ -8,26 +8,26 @@
 using namespace std;
 
 struct fio {
-    char* fam; 		//Фамилия 
-    char* name;		// Имя 
+    char* fam; 		//Р¤Р°РјРёР»РёСЏ 
+    char* name;		// РРјСЏ 
 };
 
 struct date {
-    int day; 	// день
-    int month;	// месяц
-    int year;	// год
+    int day; 	// РґРµРЅСЊ
+    int month;	// РјРµСЃСЏС†
+    int year;	// РіРѕРґ
 };
 
-date curent_date; // глобальная текущая дата
+date curent_date; // РіР»РѕР±Р°Р»СЊРЅР°СЏ С‚РµРєСѓС‰Р°СЏ РґР°С‚Р°
 
 struct pochta {
-    char* adr1; //адрес получателя 
-    char* adr2; // адрес отправителя 
+    char* adr1; //Р°РґСЂРµСЃ РїРѕР»СѓС‡Р°С‚РµР»СЏ 
+    char* adr2; // Р°РґСЂРµСЃ РѕС‚РїСЂР°РІРёС‚РµР»СЏ 
     fio fio1;
     fio fio2;
     date date;
-    int control_days; // контрольное время вручения (в днях)
-    double cost; // стоимость письма
+    int control_days; // РєРѕРЅС‚СЂРѕР»СЊРЅРѕРµ РІСЂРµРјСЏ РІСЂСѓС‡РµРЅРёСЏ (РІ РґРЅСЏС…)
+    double cost; // СЃС‚РѕРёРјРѕСЃС‚СЊ РїРёСЃСЊРјР°
 };
 
 //##############
@@ -35,8 +35,8 @@ void add_new(struct pochta** base, int* size);
 void print_base(struct pochta* base, int size);
 void print_letter(struct pochta* base, int i);
 void find_letter_fam_name_transmit(struct pochta* base, int size);
-double dateToUnixTimestamp(int year, int month, int day); // вспомогательная 
-void find_expired_letters(struct pochta* base, int size); // для лабы 7
+double dateToUnixTimestamp(int year, int month, int day); // РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅР°СЏ 
+void find_expired_letters(struct pochta* base, int size); // РґР»СЏ Р»Р°Р±С‹ 7
 void find_letter_price(struct pochta* base, int size);
 void sort_cost_low_first(struct pochta* base, int size);
 void exit(struct pochta* base, int size);
@@ -52,8 +52,8 @@ int main() {
 
     FILE* fp;
     if (fopen_s(&fp, FILE_NAME, "r") != 0)
-        // выводит строку символов с сообщением об ошибке
-        perror("ошибка при открытии файла");
+        // РІС‹РІРѕРґРёС‚ СЃС‚СЂРѕРєСѓ СЃРёРјРІРѕР»РѕРІ СЃ СЃРѕРѕР±С‰РµРЅРёРµРј РѕР± РѕС€РёР±РєРµ
+        perror("РѕС€РёР±РєР° РїСЂРё РѕС‚РєСЂС‹С‚РёРё С„Р°Р№Р»Р°");
     else {
         cout << "open  OK!" << endl;
 
@@ -63,9 +63,9 @@ int main() {
             int len = 0;
             char* next_token;
 
-            buff[strlen(buff)-1] = 0; // зануляем \n
+            buff[strlen(buff)-1] = 0; // Р·Р°РЅСѓР»СЏРµРј \n
 
-            // strtok_s аналог split из питона
+            // strtok_s Р°РЅР°Р»РѕРі split РёР· РїРёС‚РѕРЅР°
             char* token = strtok_s(buff, "\t", &next_token);
             len = strlen(token) + 1;
             base[size].adr1 = (char*)malloc(len);
@@ -103,7 +103,7 @@ int main() {
             //
             token = strtok_s(NULL, "\t", &next_token);
             len = strlen(token) + 1;
-            base[size].date.day = atoi(token); //преобразуем строку в int
+            base[size].date.day = atoi(token); //РїСЂРµРѕР±СЂР°Р·СѓРµРј СЃС‚СЂРѕРєСѓ РІ int
 
             token = strtok_s(NULL, "\t", &next_token);
             len = strlen(token) + 1;
@@ -120,37 +120,37 @@ int main() {
 
             token = strtok_s(NULL, "\t", &next_token);
             len = strlen(token) + 1;
-            base[size].cost = atof(token); //преобразуем строку в double
+            base[size].cost = atof(token); //РїСЂРµРѕР±СЂР°Р·СѓРµРј СЃС‚СЂРѕРєСѓ РІ double
 
             size++;
         }
         fclose(fp);
     }
 
-    cout << "Введите текущую дату (ДД.ММ.ГГГГ): " << endl;
+    cout << "Р’РІРµРґРёС‚Рµ С‚РµРєСѓС‰СѓСЋ РґР°С‚Сѓ (Р”Р”.РњРњ.Р“Р“Р“Р“): " << endl;
     scanf_s("%d.%d.%d", &curent_date.day, &curent_date.month, &curent_date.year);
-    getchar(); // Очищаем буфер ввода
+    getchar(); // РћС‡РёС‰Р°РµРј Р±СѓС„РµСЂ РІРІРѕРґР°
 
 
     while (true) {
         cout << "***********************************************\n"
-            << "\tБаза данных: Почта (ценное письмо)\t\n" << endl;
-        //Печать меню
-        cout << "1) Добавить новый элемент"
-            << "\n2) Распечатать базу писем"
-            << "\n3) Поиск письма по фамилии и имени отправителя"
-            << "\n4) Поиск клиентов, которые вовремя не получили письмо"
-            << "\n5) Найти все письма со стоимостью более заданного значения"
-            << "\n6) Сортировать базу по убыванию стоимости"
-            << "\n7) Выход из программы"
+            << "\tР‘Р°Р·Р° РґР°РЅРЅС‹С…: РџРѕС‡С‚Р° (С†РµРЅРЅРѕРµ РїРёСЃСЊРјРѕ)\t\n" << endl;
+        //РџРµС‡Р°С‚СЊ РјРµРЅСЋ
+        cout << "1) Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚"
+            << "\n2) Р Р°СЃРїРµС‡Р°С‚Р°С‚СЊ Р±Р°Р·Сѓ РїРёСЃРµРј"
+            << "\n3) РџРѕРёСЃРє РїРёСЃСЊРјР° РїРѕ С„Р°РјРёР»РёРё Рё РёРјРµРЅРё РѕС‚РїСЂР°РІРёС‚РµР»СЏ"
+            << "\n4) РџРѕРёСЃРє РєР»РёРµРЅС‚РѕРІ, РєРѕС‚РѕСЂС‹Рµ РІРѕРІСЂРµРјСЏ РЅРµ РїРѕР»СѓС‡РёР»Рё РїРёСЃСЊРјРѕ"
+            << "\n5) РќР°Р№С‚Рё РІСЃРµ РїРёСЃСЊРјР° СЃРѕ СЃС‚РѕРёРјРѕСЃС‚СЊСЋ Р±РѕР»РµРµ Р·Р°РґР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ"
+            << "\n6) РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ Р±Р°Р·Сѓ РїРѕ СѓР±С‹РІР°РЅРёСЋ СЃС‚РѕРёРјРѕСЃС‚Рё"
+            << "\n7) Р’С‹С…РѕРґ РёР· РїСЂРѕРіСЂР°РјРјС‹"
             << "\n***********************************************" << endl;
 
         int number;
-        cout << "\nВведите номер функции: ";
+        cout << "\nР’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ С„СѓРЅРєС†РёРё: ";
         scanf_s("%d", &number);
         getchar();
 
-        // Выбор позиции меню
+        // Р’С‹Р±РѕСЂ РїРѕР·РёС†РёРё РјРµРЅСЋ
         switch (number) {
         case 1:
             add_new(&base, &size);
@@ -181,7 +181,7 @@ int main() {
             return 0;
 
         default:
-            cout << "Неверный ввод!!\n" << endl;
+            cout << "РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ!!\n" << endl;
         }
     }
     return 0;
@@ -196,121 +196,121 @@ void add_new(struct pochta** base, int* size) {
 
     new_base = (pochta*)realloc(*base, (*size + 1) * sizeof(struct pochta));
     if (new_base == NULL) {
-        cout << "Ошибка!" << endl;
+        cout << "РћС€РёР±РєР°!" << endl;
         return;
     }
     *base = new_base;
 
-    cout << "Адресс получателя: ";
-    gets_s(buff, N); // вводстроки cклавиатуры в переменную buff
+    cout << "РђРґСЂРµСЃСЃ РїРѕР»СѓС‡Р°С‚РµР»СЏ: ";
+    gets_s(buff, N); // РІРІРѕРґСЃС‚СЂРѕРєРё cРєР»Р°РІРёР°С‚СѓСЂС‹ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ buff
     int len = strlen(buff) + 1;
-    (*base)[*size].adr1 = (char*)malloc(len); //выделить динамическую память под строку
-    strcpy_s((*base)[*size].adr1, len, buff); // копировать buff в динамическую память
+    (*base)[*size].adr1 = (char*)malloc(len); //РІС‹РґРµР»РёС‚СЊ РґРёРЅР°РјРёС‡РµСЃРєСѓСЋ РїР°РјСЏС‚СЊ РїРѕРґ СЃС‚СЂРѕРєСѓ
+    strcpy_s((*base)[*size].adr1, len, buff); // РєРѕРїРёСЂРѕРІР°С‚СЊ buff РІ РґРёРЅР°РјРёС‡РµСЃРєСѓСЋ РїР°РјСЏС‚СЊ
 
-    cout << "Фамилия получателя: ";
+    cout << "Р¤Р°РјРёР»РёСЏ РїРѕР»СѓС‡Р°С‚РµР»СЏ: ";
     gets_s(buff, N);
     len = strlen(buff) + 1;
     (*base)[*size].fio1.fam = (char*)malloc(len);
     strcpy_s((*base)[*size].fio1.fam, len, buff);
 
-    cout << "Имя получателя: ";
+    cout << "РРјСЏ РїРѕР»СѓС‡Р°С‚РµР»СЏ: ";
     gets_s(buff, N);
     len = strlen(buff) + 1;
     (*base)[*size].fio1.name = (char*)malloc(len);
     strcpy_s((*base)[*size].fio1.name, len, buff);
 
-    cout << "Адресс отправителя: ";
+    cout << "РђРґСЂРµСЃСЃ РѕС‚РїСЂР°РІРёС‚РµР»СЏ: ";
     gets_s(buff, N);
     len = strlen(buff) + 1;
     (*base)[*size].adr2 = (char*)malloc(len);
     strcpy_s((*base)[*size].adr2, len, buff);
 
-    cout << "Фамилия отправителя: ";
+    cout << "Р¤Р°РјРёР»РёСЏ РѕС‚РїСЂР°РІРёС‚РµР»СЏ: ";
     gets_s(buff, N);
     len = strlen(buff) + 1;
     (*base)[*size].fio2.fam = (char*)malloc(len);
     strcpy_s((*base)[*size].fio2.fam, len, buff);
 
-    cout << "Имя отправителя: ";
+    cout << "РРјСЏ РѕС‚РїСЂР°РІРёС‚РµР»СЏ: ";
     gets_s(buff, N);
     len = strlen(buff) + 1;
     (*base)[*size].fio2.name = (char*)malloc(len);
     strcpy_s((*base)[*size].fio2.name, len, buff);
 
-    cout << "Стоимость письма: ";
+    cout << "РЎС‚РѕРёРјРѕСЃС‚СЊ РїРёСЃСЊРјР°: ";
     cin >> (*base)[*size].cost;
 
-    cout << "Дата отправки письма (ДД.ММ.ГГГГ): ";
+    cout << "Р”Р°С‚Р° РѕС‚РїСЂР°РІРєРё РїРёСЃСЊРјР° (Р”Р”.РњРњ.Р“Р“Р“Р“): ";
     scanf_s("%d.%d.%d", &(*base)[*size].date.day, &(*base)[*size].date.month, &(*base)[*size].date.year);
-    getchar(); // Очищаем буфер ввода
+    getchar(); // РћС‡РёС‰Р°РµРј Р±СѓС„РµСЂ РІРІРѕРґР°
 
-    cout << "Контрольное время вручения (в днях): ";
+    cout << "РљРѕРЅС‚СЂРѕР»СЊРЅРѕРµ РІСЂРµРјСЏ РІСЂСѓС‡РµРЅРёСЏ (РІ РґРЅСЏС…): ";
     cin >> (*base)[*size].control_days;
 
     (*size)++;
-    cout << "Добавлено письмо\n\n" << endl;
+    cout << "Р”РѕР±Р°РІР»РµРЅРѕ РїРёСЃСЊРјРѕ\n\n" << endl;
 }
 
 
 void print_letter(struct pochta* base, int i) {
-    cout << '|' << setw(COL1_WIDTH) << setfill(' ') << left << "Адрес" << '|' << setw(COL2_WIDTH) << left << base[i].adr1 << '|' << setw(COL2_WIDTH) << base[i].adr2 << '|' << endl;
-    cout << '|' << setw(COL1_WIDTH) << left << "Фамилия" << '|' << setw(COL2_WIDTH) << left << base[i].fio1.fam << '|' << setw(COL2_WIDTH) << left << base[i].fio2.fam << '|' << endl;
-    cout << '|' << setw(COL1_WIDTH) << left << "Имя" << '|' << setw(COL2_WIDTH) << left << base[i].fio1.name << '|' << setw(COL2_WIDTH) << left << base[i].fio2.name << '|' << endl;
+    cout << '|' << setw(COL1_WIDTH) << setfill(' ') << left << "РђРґСЂРµСЃ" << '|' << setw(COL2_WIDTH) << left << base[i].adr1 << '|' << setw(COL2_WIDTH) << base[i].adr2 << '|' << endl;
+    cout << '|' << setw(COL1_WIDTH) << left << "Р¤Р°РјРёР»РёСЏ" << '|' << setw(COL2_WIDTH) << left << base[i].fio1.fam << '|' << setw(COL2_WIDTH) << left << base[i].fio2.fam << '|' << endl;
+    cout << '|' << setw(COL1_WIDTH) << left << "РРјСЏ" << '|' << setw(COL2_WIDTH) << left << base[i].fio1.name << '|' << setw(COL2_WIDTH) << left << base[i].fio2.name << '|' << endl;
     cout << '+' << setw(COL1_WIDTH + COL2_WIDTH * 2 + 2) << setfill('=') << "=" << '+' << endl;
-    cout << '|' << setw(COL1_WIDTH) << setfill(' ') << left << "Цена (руб)" << '|' << setw(COL2_WIDTH * 2 + 1) << left << base[i].cost << '|' << endl;
+    cout << '|' << setw(COL1_WIDTH) << setfill(' ') << left << "Р¦РµРЅР° (СЂСѓР±)" << '|' << setw(COL2_WIDTH * 2 + 1) << left << base[i].cost << '|' << endl;
 
     char buff[N];
-    sprintf_s(buff, N, "%02d.%02d.%04d (контрольное время вручения %d дней)", base[i].date.day, base[i].date.month, base[i].date.year, base[i].control_days); // вывод даты в буфер
-    cout << '|' << setw(COL1_WIDTH) << setfill(' ') << left << "Дата отпр" << '|' << setw(COL2_WIDTH * 2 + 1) << left << buff << '|' << endl;
+    sprintf_s(buff, N, "%02d.%02d.%04d (РєРѕРЅС‚СЂРѕР»СЊРЅРѕРµ РІСЂРµРјСЏ РІСЂСѓС‡РµРЅРёСЏ %d РґРЅРµР№)", base[i].date.day, base[i].date.month, base[i].date.year, base[i].control_days); // РІС‹РІРѕРґ РґР°С‚С‹ РІ Р±СѓС„РµСЂ
+    cout << '|' << setw(COL1_WIDTH) << setfill(' ') << left << "Р”Р°С‚Р° РѕС‚РїСЂ" << '|' << setw(COL2_WIDTH * 2 + 1) << left << buff << '|' << endl;
     cout << '+' << setw(COL1_WIDTH + COL2_WIDTH * 2 + 2) << setfill('=') << "=" << '+' << endl;
 }
 
 
 void print_base(struct pochta* base, int size) {
     if (size == 0) {
-        printf("База данных пуста!\n");
+        printf("Р‘Р°Р·Р° РґР°РЅРЅС‹С… РїСѓСЃС‚Р°!\n");
         return;
     }
-    cout << "\n\t\t\tБаза данных: Почта (ценное письмо)\t" << endl;
+    cout << "\n\t\t\tР‘Р°Р·Р° РґР°РЅРЅС‹С…: РџРѕС‡С‚Р° (С†РµРЅРЅРѕРµ РїРёСЃСЊРјРѕ)\t" << endl;
     cout << '+' << setw(COL1_WIDTH + COL2_WIDTH * 2 + 2) << setfill('=') << "=" << '+' << endl;
-    cout << '|' << setw(COL1_WIDTH) << setfill(' ') << " " << '|' << setw(COL2_WIDTH) << left << "Получатель" << '|' << setw(COL2_WIDTH) << left << "Отправитель" << '|' << endl;
+    cout << '|' << setw(COL1_WIDTH) << setfill(' ') << " " << '|' << setw(COL2_WIDTH) << left << "РџРѕР»СѓС‡Р°С‚РµР»СЊ" << '|' << setw(COL2_WIDTH) << left << "РћС‚РїСЂР°РІРёС‚РµР»СЊ" << '|' << endl;
     cout << '+' << setw(COL1_WIDTH + COL2_WIDTH * 2 + 2) << setfill('=') << "=" << '+' << endl;
 
     for (int i = 0; i < size; i++) {
         print_letter(base, i);
     }
-    printf("\nКоличество записей в базе: %d\n\n", size);
+    printf("\nРљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№ РІ Р±Р°Р·Рµ: %d\n\n", size);
 }
 
 
 void find_letter_fam_name_transmit(struct pochta* base, int size) {
     if (size == 0) {
-        printf("База данных пуста!\n");
+        printf("Р‘Р°Р·Р° РґР°РЅРЅС‹С… РїСѓСЃС‚Р°!\n");
         return;
     }
 
     char buff_name[N];
     char buff_fam[N];
 
-    cout << "Ведите фамилию отправителя: ";
-    gets_s(buff_fam, N); // вводстроки cклавиатуры в переменную buff
+    cout << "Р’РµРґРёС‚Рµ С„Р°РјРёР»РёСЋ РѕС‚РїСЂР°РІРёС‚РµР»СЏ: ";
+    gets_s(buff_fam, N); // РІРІРѕРґСЃС‚СЂРѕРєРё cРєР»Р°РІРёР°С‚СѓСЂС‹ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ buff
 
-    cout << "Ведите имя отправителя: ";
-    gets_s(buff_name, N); // вводстроки cклавиатуры в переменную buff
+    cout << "Р’РµРґРёС‚Рµ РёРјСЏ РѕС‚РїСЂР°РІРёС‚РµР»СЏ: ";
+    gets_s(buff_name, N); // РІРІРѕРґСЃС‚СЂРѕРєРё cРєР»Р°РІРёР°С‚СѓСЂС‹ РІ РїРµСЂРµРјРµРЅРЅСѓСЋ buff
 
     for (int i = 0; i < size; i++) {
         if (strcmp(buff_name, base[i].fio2.name) == 0 && strcmp(buff_fam, base[i].fio2.fam) == 0) {
             cout << '+' << setw(COL1_WIDTH + COL2_WIDTH * 2 + 2) << setfill('=') << "=" << '+' << endl;
             print_letter(base, i);
-            // TO DO если только первое письмо то ставим break;
+            // TO DO РµСЃР»Рё С‚РѕР»СЊРєРѕ РїРµСЂРІРѕРµ РїРёСЃСЊРјРѕ С‚Рѕ СЃС‚Р°РІРёРј break;
             return;
         }
     }
-    cout << "\nПисьма с задаными данными не найдены!\n" << endl;
+    cout << "\nРџРёСЃСЊРјР° СЃ Р·Р°РґР°РЅС‹РјРё РґР°РЅРЅС‹РјРё РЅРµ РЅР°Р№РґРµРЅС‹!\n" << endl;
 }
 
 
-double dateToUnixTimestamp(int day, int month, int year) { // переводим дату в юникс (кол-во секунд до даты)
+double dateToUnixTimestamp(int day, int month, int year) { // РїРµСЂРµРІРѕРґРёРј РґР°С‚Сѓ РІ СЋРЅРёРєСЃ (РєРѕР»-РІРѕ СЃРµРєСѓРЅРґ РґРѕ РґР°С‚С‹)
     tm t{};
     t.tm_year = year - 1900;
     t.tm_mon = month - 1;
@@ -326,7 +326,7 @@ double dateToUnixTimestamp(int day, int month, int year) { // переводим дату в ю
 
 void find_expired_letters(struct pochta* base, int size) {
     if (size == 0) {
-        printf("База данных пуста!\n");
+        printf("Р‘Р°Р·Р° РґР°РЅРЅС‹С… РїСѓСЃС‚Р°!\n");
         return;
     }
 
@@ -339,22 +339,22 @@ void find_expired_letters(struct pochta* base, int size) {
         }
     }
     if (!flag)
-        cout << "\nПисьма с задаными данными не найдены!\n" << endl;
+        cout << "\nРџРёСЃСЊРјР° СЃ Р·Р°РґР°РЅС‹РјРё РґР°РЅРЅС‹РјРё РЅРµ РЅР°Р№РґРµРЅС‹!\n" << endl;
     else
-        printf("\nКоличество найденых записей в базе: %d\n\n", flag);
+        printf("\nРљРѕР»РёС‡РµСЃС‚РІРѕ РЅР°Р№РґРµРЅС‹С… Р·Р°РїРёСЃРµР№ РІ Р±Р°Р·Рµ: %d\n\n", flag);
 }
 
 
 void find_letter_price(struct pochta* base, int size) {
     if (size == 0) {
-        printf("База данных пуста!\n");
+        printf("Р‘Р°Р·Р° РґР°РЅРЅС‹С… РїСѓСЃС‚Р°!\n");
         return;
     }
 
     double price;
     int flag = 0;
 
-    cout << "Ведите стоимость письма: ";
+    cout << "Р’РµРґРёС‚Рµ СЃС‚РѕРёРјРѕСЃС‚СЊ РїРёСЃСЊРјР°: ";
     cin >> price;
 
     for (int i = 0; i < size; i++) {
@@ -365,14 +365,14 @@ void find_letter_price(struct pochta* base, int size) {
         }
     }
     if (flag == 0) {
-        cout << "\nПисьма с задаными данными не найдены!\n" << endl;
+        cout << "\nРџРёСЃСЊРјР° СЃ Р·Р°РґР°РЅС‹РјРё РґР°РЅРЅС‹РјРё РЅРµ РЅР°Р№РґРµРЅС‹!\n" << endl;
     }
 }
 
 
 void sort_cost_low_first(struct pochta* base, int size) {
     if (size == 0) {
-        printf("База данных пуста!\n");
+        printf("Р‘Р°Р·Р° РґР°РЅРЅС‹С… РїСѓСЃС‚Р°!\n");
         return;
     }
 
@@ -385,15 +385,15 @@ void sort_cost_low_first(struct pochta* base, int size) {
             }
         }
     }
-    cout << "База отсортирована по убыванию стоимости!\n" << endl;
+    cout << "Р‘Р°Р·Р° РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅР° РїРѕ СѓР±С‹РІР°РЅРёСЋ СЃС‚РѕРёРјРѕСЃС‚Рё!\n" << endl;
 }
 
 
 void exit(struct pochta* base, int size) {
     char buff[N];
     FILE* fp;
-    if (fopen_s(&fp, FILE_NAME, "w") != 0) // открываем файл на запись - w
-        perror("Ошибка при открытии файла");
+    if (fopen_s(&fp, FILE_NAME, "w") != 0) // РѕС‚РєСЂС‹РІР°РµРј С„Р°Р№Р» РЅР° Р·Р°РїРёСЃСЊ - w
+        perror("РћС€РёР±РєР° РїСЂРё РѕС‚РєСЂС‹С‚РёРё С„Р°Р№Р»Р°");
     else {
         cout << "open  OK!" << endl;
 
